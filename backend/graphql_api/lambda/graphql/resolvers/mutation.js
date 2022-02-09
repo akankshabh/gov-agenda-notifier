@@ -143,7 +143,7 @@ module.exports = (logger) => {
 
   module.updateMeetingItem = async (dbClient, args, context) => {
     validator.validateAuthorization(context);
-    validator.validateUpdateMeetingItem(args);
+    //validator.validateUpdateMeetingItem(args);
 
     let res;
     try {

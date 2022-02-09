@@ -234,22 +234,16 @@ module.exports = async (logger) => {
         SET
             order_number = $2,
             status = $3,
-            item_start_timestamp = to_timestamp($4),
-            item_end_timestamp = to_timestamp($5),
-            updated_timestamp = to_timestamp($6),
-            content_categories = $7,
-            description_loc_key = $8,
-            title_loc_key = $9,
-            parent_meeting_item_id = $10
+            content_categories = $4,
+            description_loc_key = $5,
+            title_loc_key = $6,
+            parent_meeting_item_id = $7
         WHERE id = $1`;
     return query(queryString,
       [
         id,
         orderNumber,
         status,
-        convertMsToSeconds(itemStartTimestamp),
-        convertMsToSeconds(itemEndTimestamp),
-        convertMsToSeconds(updatedTimestamp),
         contentCategories,
         descriptionLocKey,
         titleLocKey,
