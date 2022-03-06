@@ -59,6 +59,19 @@ const UpdateItemStatusModal = ({
     },
   };
 
+  const errorMesages = {
+    errors: {
+      upComing: {
+        toCompleted: 'Dispaly error preventing this',
+        itemAboveNotCompelted: 'Error to Display if item above not compelted',
+        itemAboveNotDeferred: 'Error to Display if item above not deferered',
+      },
+      other: {
+        multipleInProgress: 'Dispaly Error when trying to assign multiple in Progress',
+      },
+    },
+  };
+
   useEffect(() => {
     document.querySelector('body').style.overflow = 'hidden';
 
