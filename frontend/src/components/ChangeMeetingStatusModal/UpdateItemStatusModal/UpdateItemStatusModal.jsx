@@ -62,12 +62,15 @@ const UpdateItemStatusModal = ({
   const errorMesages = {
     errors: {
       upComing: {
-        toCompleted: 'Dispaly error preventing this',
-        itemAboveNotCompelted: 'Error to Display if item above not compelted',
-        itemAboveNotDeferred: 'Error to Display if item above not deferered',
+        toCompleted: 'Error to Display preventing this',
+        itemAboveNotCompelted: 'Error to Display if item above not completed',
+        itemAboveNotDeferred: 'Error to Display if item above not deferrered',
       },
       other: {
-        multipleInProgress: 'Dispaly Error when trying to assign multiple in Progress',
+        multipleInProgress: 'Error to Display when trying to assign multiple in Progress',
+      },
+      warnings: {
+        itemAboveNotCompleted: 'Warning to Display when item above is not completed',
       },
     },
   };
