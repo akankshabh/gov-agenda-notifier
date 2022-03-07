@@ -26,7 +26,8 @@ import buildButtonClasses from '../../utils/buildButtonClasses';
 
 const ChangeMeetingStatusModal = ({ args }) => {
   const {
-    item, itemRef, dropDownRef, setDisplaySetStatusModal, setDisableSort, refetchAllMeeting,
+    agendaGroups, item, itemRef, dropDownRef, setDisplaySetStatusModal,
+    setDisableSort, refetchAllMeeting,
   } = args;
   Modal.setAppElement('#root');
   const [contentRef, setContentRef] = useState(null);
@@ -72,6 +73,7 @@ const ChangeMeetingStatusModal = ({ args }) => {
   };
 
   const updateItemStatusModalArgs = {
+    agendaGroups,
     setShowItemStatusModal,
     setDisplaySetStatusModal,
     item,

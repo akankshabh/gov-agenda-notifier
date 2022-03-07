@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 
 import Modal from 'react-modal/lib/components/Modal';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, I18nContext } from 'react-i18next';
 import './UpdateItemStatusModal.scss';
 import { CloseIcon, ArrowUpwardIcon } from '../../../utils/_icons';
 import { UPDATE_MEETING_ITEM } from '../../../graphql/graphql';
+import MeetingItemStates from '../../../constants/MeetingItemStates';
 
 /**
  * Presentation component that lets the user comfirm the chaange in item status
@@ -27,6 +28,22 @@ import { UPDATE_MEETING_ITEM } from '../../../graphql/graphql';
  *      Contains the class,value,status of the new meeting button
  */
 
+const errorMesages = {
+  errors: {
+    upComing: {
+      toCompleted: 'Error to Display preventing this',
+      itemAboveNotCompelted: 'Error to Display if item above not completed',
+      itemAboveNotDeferred: 'Error to Display if item above not deferrered',
+    },
+    other: {
+      multipleInProgress: 'Error to Display when trying to assign multiple in Progress',
+    },
+    warnings: {
+      itemAboveNotCompleted: 'Warning to Display when item above is not completed',
+    },
+  },
+};
+
 function updateTheItem(updateItem, item, newStatus) {
   updateItem({
     variables: {
@@ -43,12 +60,70 @@ function updateTheItem(updateItem, item, newStatus) {
   });
 }
 
+function determineIfError(agendaGroups, oldStatus, newStatus, itemId) {
+  // helper functions
+  function getParentIndex() {
+    const index = {
+      parent: null,
+      item: null,
+    };
+
+    agendaGroups.forEach((group, iP) => {
+      group.items.forEach((item, iI) => {
+        if (item.id === itemId) {
+          index.parent = iP;
+          index.item = iI;
+        }
+      });
+    });
+    return index;
+  }
+
+  // variables
+  const isError = {
+    flag: false,
+    msg: '',
+  };
+  const indexes = getParentIndex();
+  const parentI = indexes.parent;
+  const itemI = indexes.item;
+  console.log(parentI);
+  console.log(itemI);
+  console.log(indexes);
+  console.log(agendaGroups);
+  console.log(oldStatus.status);
+  console.log(newStatus);
+  console.log(itemId);
+  // check upcoming
+  if (oldStatus.status === MeetingItemStates.PENDING) {
+    // setting to Completed
+    if (newStatus.status === MeetingItemStates.COMPLETED) {
+      isError.flag = true;
+      isError.msg = errorMesages.errors.upComing.toCompleted;
+    } else
+    // setting to In Progress
+    if (newStatus.status === MeetingItemStates.IN_PROGRESS) {
+      // first group doesn't check element 0
+      if (parentI === 0 && itemI > 0) {
+        if (agendaGroups[parentI].items[itemI - 1].status !== MeetingItemStates.COMPLETED) {
+          isError.flag = true;
+          isError.msg = errorMesages.errors.upComing.itemAboveNotCompelted;
+        }
+      }
+    }
+  }
+
+  return isError;
+}
+
 const UpdateItemStatusModal = ({
   args,
 }) => {
   const {
-    item, setShowItemStatusModal, setDisplaySetStatusModal, oldStatus, newStatus, refetchAllMeeting,
+    agendaGroups, item, setShowItemStatusModal, setDisplaySetStatusModal,
+    oldStatus, newStatus, refetchAllMeeting,
   } = args;
+  console.log(determineIfError(agendaGroups, oldStatus, newStatus, item.id));
 
   const { t } = useTranslation();
   const [updateItem, { error }] = useMutation(UPDATE_MEETING_ITEM,
@@ -56,22 +131,6 @@ const UpdateItemStatusModal = ({
   const modalOverlayStyle = {
     overlay: {
       backgroundColor: 'none',
-    },
-  };
-
-  const errorMesages = {
-    errors: {
-      upComing: {
-        toCompleted: 'Error to Display preventing this',
-        itemAboveNotCompelted: 'Error to Display if item above not completed',
-        itemAboveNotDeferred: 'Error to Display if item above not deferrered',
-      },
-      other: {
-        multipleInProgress: 'Error to Display when trying to assign multiple in Progress',
-      },
-      warnings: {
-        itemAboveNotCompleted: 'Warning to Display when item above is not completed',
-      },
     },
   };
 

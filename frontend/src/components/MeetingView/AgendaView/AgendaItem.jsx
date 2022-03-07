@@ -72,7 +72,9 @@ import ChangeMeetingStatusModal from '../../ChangeMeetingStatusModal/ChangeMeeti
 function AgendaItem({
   item, subStatus, args,
 }) {
-  const { refetchAllMeeting, refetchSubs, getSubError } = args;
+  const {
+    agendaGroups, refetchAllMeeting, refetchSubs, getSubError,
+  } = args;
 
   const [disableSort, setDisableSort] = useState(false);
   const {
@@ -85,6 +87,7 @@ function AgendaItem({
   };
 
   const renderedAgendaItemArgs = {
+    agendaGroups,
     item,
     refetchSubs,
     refetchAllMeeting,
@@ -133,7 +136,7 @@ const RenderedAgendaItem = forwardRef(
     subStatus, args, ...props
   }, ref) => {
     const {
-      setDisableSort, refetchSubs, item,
+      agendaGroups, setDisableSort, refetchSubs, item,
       refetchAllMeeting, dragOverlay = false, getSubError = false,
     } = args;
 
@@ -189,6 +192,7 @@ const RenderedAgendaItem = forwardRef(
 
     // arguments
     const changeMeetingStatusArgs = {
+      agendaGroups,
       item,
       dropDownRef,
       itemRef,

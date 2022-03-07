@@ -76,6 +76,7 @@ function AgendaGroups({ args }) {
   const groupId = 'group-id';
 
   const agendaGroupBodyArgs = {
+    agendaGroups,
     subbedItems,
     refetchSubs,
     refetchAllMeeting,
@@ -218,7 +219,7 @@ function AgendaGroupBody({
   agendaGroup, args,
 }) {
   const {
-    subbedItems, refetchAllMeeting, refetchSubs, getSubError,
+    agendaGroups, subbedItems, refetchAllMeeting, refetchSubs, getSubError,
   } = args;
 
   const { setNodeRef } = useDroppable({
@@ -232,6 +233,7 @@ function AgendaGroupBody({
   };
 
   const agendaItemArgs = {
+    agendaGroups,
     refetchSubs,
     refetchAllMeeting,
     getSubError,
